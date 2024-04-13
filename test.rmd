@@ -1,0 +1,61 @@
+---
+title: "My first dash board"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: columns
+    vertical_layout: fill
+    
+---
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+library(readr)
+library(highcharter)
+library(dplyr)
+library(tidyverse)
+library(colorspace)
+```
+
+Column {data-width=650}
+-----------------------------------------------------------------------
+
+### Chart A
+
+```{r}
+df <- read_csv("C:/Users/SAMEERA/Downloads/new.csv")
+```
+
+Column {data-width=350}
+-----------------------------------------------------------------------
+
+### Chart B
+
+```{r}
+df %>%
+  group_by(Author) %>%
+  summarise(Reviews = sum(Reviews)) %>%
+  arrange(desc(Reviews)) %>%
+  head(15) %>%
+  hchart('column', hcaes(x = Author, y = Reviews), color = rainbow_hcl(15)) %>%  # Using rainbow_hcl for custom colors
+  hc_add_theme(hc_theme_google()) %>%
+  hc_tooltip(pointFormat = '<b>Number of reviews:</b>{point.y}<br>') %>%
+  hc_title(text = "Most Popular Authors from 2009 to 2019", style = list(fontSize = '25px', fontWeight = 'bold')) %>%
+  hc_subtitle(text = "By Number of Reviews", style = list(fontSize = '16px'))
+
+
+
+```
+
+### Chart C
+
+```{r}
+df %>%
+  head(15) %>%
+  hchart('bar', hcaes(x = Name, y = Reviews), color = rainbow_hcl(15)) %>%  # Using rainbow_hcl for custom colors
+  hc_add_theme(hc_theme_google()) %>%
+  hc_tooltip(pointFormat = '<b>Number of reviews:</b>{point.y}<br>') %>%
+  hc_title(text = "Most Popular Authors from 2009 to 2019", style = list(fontSize = '25px', fontWeight = 'bold')) %>%
+  hc_subtitle(text = "By Number of Reviews", style = list(fontSize = '16px'))
+
+```
+
